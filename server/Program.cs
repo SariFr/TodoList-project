@@ -22,6 +22,8 @@ builder.Services.AddDbContext<ToDoDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ToDoDB"))
     )
 );
+var connectionString = builder.Configuration.GetConnectionString("ToDoDB");
+Console.WriteLine($"Connection String: {connectionString}");
 
 
 // builder.Services.Configure<Application>(builder.Configuration.GetSection(nameof(Application)));
