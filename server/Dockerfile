@@ -8,10 +8,20 @@ ENV ASPNETCORE_URLS=http://+:80
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG configuration=Release
 WORKDIR /src
+
+# העתק את קובץ ה-proj לתוך תיקיית src
 COPY ["TodoApi.csproj", "./"]
+
+# שיחזור התלויות
 RUN dotnet restore "TodoApi.csproj"
+
+# העתק את שאר הקבצים
 COPY . .
-WORKDIR "/src/server"
+
+# שינוי ה-WORKDIR לתיקייה של הפרויקט
+WORKDIR "/src"
+
+# בניית הפרויקט
 RUN dotnet build "TodoApi.csproj" -c $configuration -o /app/build
 
 FROM build AS publish
