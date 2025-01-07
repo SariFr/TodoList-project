@@ -92,11 +92,11 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigin");
@@ -270,5 +270,6 @@ app.MapDelete("/items/{id}", async (HttpContext httpContext, int id, ToDoDbConte
 })
 .RequireAuthorization();
 
+app.MapGet("/", ()=> "ToDoList API is running!");
 
 app.Run();

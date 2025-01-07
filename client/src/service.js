@@ -7,7 +7,7 @@ import jwt_decode from "jwt-decode";
 
 
 // הגדרת URL של ה-API כערך ברירת מחדל
-axios.defaults.baseURL = "http://localhost:5035";
+axios.defaults.baseURL = process.env.REACT_APP_API_KEY;
 setAuthorizationBearer();
 
 
