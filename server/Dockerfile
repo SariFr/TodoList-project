@@ -9,11 +9,11 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG configuration=Release
 WORKDIR /src
 
+# העתיקי רק את קובץ ה-TodoApi.csproj בשלב זה
 COPY server/TodoApi.csproj server/
 RUN dotnet restore server/TodoApi.csproj
 
-# COPY ["server/TodoApi.csproj", "server/"]
-# RUN dotnet restore "server/TodoApi.csproj"
+# העתיקי את שאר הקבצים
 COPY . .
 WORKDIR "/src/server"
 RUN dotnet build "TodoApi.csproj" -c $configuration -o /app/build
