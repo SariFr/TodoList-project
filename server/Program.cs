@@ -23,7 +23,7 @@ if (builder.Environment.IsDevelopment())
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("ToDoDB"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ToDoDB"))
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ToDoDB").Trim())
     )
 );
 var connectionString = builder.Configuration.GetConnectionString("ToDoDB");
