@@ -20,13 +20,14 @@ if (builder.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>(); // או שם של מחלקה בפרויקט שלך
 }
 
+var connectionString = builder.Configuration.GetConnectionString("ToDoDB").Trim();
+
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("ToDoDB"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ToDoDB").Trim())
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
     )
 );
-var connectionString = builder.Configuration.GetConnectionString("ToDoDB");
 Console.WriteLine($"Connection String: {connectionString}");
 
 
