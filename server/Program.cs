@@ -21,7 +21,10 @@ if (builder.Environment.IsDevelopment())
 }
 
 var connectionString = builder.Configuration.GetConnectionString("ToDoDB").Trim();
-
+if (string.IsNullOrEmpty(connectionString))
+{
+  throw new InvalidOperationException("Connection string 'ToDoDB' not found.");
+}
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(
         connectionString,
