@@ -15,6 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>(); // או שם של מחלקה בפרויקט שלך
+}
 
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(
