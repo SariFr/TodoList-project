@@ -157,13 +157,8 @@ app.MapPost("/login", async ([FromBody] LoginModel loginModel, ToDoDbContext db,
 // Register
 app.MapPost("/register", async ([FromBody] LoginModel loginModel, ToDoDbContext db, IConfiguration configuration) =>
 {
-    Console.WriteLine("try register");
     var name = loginModel.Email.Split("@")[0];
-        Console.WriteLine($"name {name}");
-
     var lastId = await db.Users.MaxAsync(u => (int?)u.Id) ?? 0;
-    Console.WriteLine($"lastId {lastId}");
-
     var newUser = new User
     {
         Id = lastId + 1,
@@ -173,8 +168,6 @@ app.MapPost("/register", async ([FromBody] LoginModel loginModel, ToDoDbContext 
     };
 
     db.Users?.Add(newUser);
-        Console.WriteLine("sucsses add");
-
     await db.SaveChangesAsync();
 
     var jwt = CreateJWT(newUser, configuration);
@@ -187,6 +180,7 @@ app.MapPost("/register", async ([FromBody] LoginModel loginModel, ToDoDbContext 
 // GET: שליפת כל הפריטים של משתמש
 app.MapGet("/items", async (HttpContext httpContext, ToDoDbContext db) =>
 {
+    Console.WriteLine("try get items");
     var userIdClaim = httpContext.User.Claims.FirstOrDefault(c => c.Type == "id");
     if (userIdClaim == null)
     {
@@ -196,6 +190,8 @@ app.MapGet("/items", async (HttpContext httpContext, ToDoDbContext db) =>
     var userId = int.Parse(userIdClaim.Value);
 
     var items = await db.Items.Where(i => i.UserId == userId).ToListAsync();
+        Console.WriteLine("sucsses get items");
+
     return Results.Ok(items);
 })
 .RequireAuthorization();
@@ -213,6 +209,8 @@ app.MapGet("/items/{id}", async (int id, ToDoDbContext db) =>
 // POST: הוספת פריט חדש
 app.MapPost("/items", async (HttpContext httpContext, [FromBody] Item newItem, ToDoDbContext db) =>
 {
+        Console.WriteLine("try post item");
+
     var userIdClaim = httpContext.User.Claims.FirstOrDefault(c => c.Type == "id");
     if (userIdClaim == null)
     {
@@ -222,8 +220,11 @@ app.MapPost("/items", async (HttpContext httpContext, [FromBody] Item newItem, T
     var userId = int.Parse(userIdClaim.Value);
 
     newItem.UserId = userId;
+    Console.WriteLine($"new item: id {newItem.Id} name {newItem.Name}");
 
     db.Items.Add(newItem);
+        Console.WriteLine("sucsses add item");
+
     await db.SaveChangesAsync();
     return Results.Created($"/items/{newItem.Id}", newItem);
 })
