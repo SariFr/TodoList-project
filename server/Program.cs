@@ -20,23 +20,19 @@ if (builder.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>(); // או שם של מחלקה בפרויקט שלך
 }
 
-var connectionString = builder.Configuration.GetConnectionString("ToDoDB").Trim();
-if (string.IsNullOrEmpty(connectionString))
-{
-  throw new InvalidOperationException("Connection string 'ToDoDB' not found.");
-}
+var connectionString = builder.Configuration.GetConnectionString("ToDoDB");
+
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(
         connectionString,
-        ServerVersion.AutoDetect(connectionString)
+                ServerVersion.AutoDetect(connectionString)
+
     )
 );
-Console.WriteLine($"Connection String: {connectionString}");
 
 
-// builder.Services.Configure<Application>(builder.Configuration.GetSection(nameof(Application)));
+Console.WriteLine($"Connection String: {builder.Configuration.GetConnectionString("ToDoDB")}");
 
-// builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationHandler>();
 
 
 builder.Services.AddControllers();
@@ -161,8 +157,13 @@ app.MapPost("/login", async ([FromBody] LoginModel loginModel, ToDoDbContext db,
 // Register
 app.MapPost("/register", async ([FromBody] LoginModel loginModel, ToDoDbContext db, IConfiguration configuration) =>
 {
+    Console.WriteLine("try register");
     var name = loginModel.Email.Split("@")[0];
+        Console.WriteLine($"name {name}");
+
     var lastId = await db.Users.MaxAsync(u => (int?)u.Id) ?? 0;
+    Console.WriteLine($"lastId {lastId}");
+
     var newUser = new User
     {
         Id = lastId + 1,
@@ -172,6 +173,8 @@ app.MapPost("/register", async ([FromBody] LoginModel loginModel, ToDoDbContext 
     };
 
     db.Users?.Add(newUser);
+        Console.WriteLine("sucsses add");
+
     await db.SaveChangesAsync();
 
     var jwt = CreateJWT(newUser, configuration);
