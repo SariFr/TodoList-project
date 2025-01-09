@@ -96,7 +96,7 @@ const apiService = {
       isComplete: false, 
       userId: loginUser.id // הוספת UserId
     };
-  
+    console.log("new item ".newItem)
     const result = await axios.post('/items', newItem);
     return result.data;
   },
