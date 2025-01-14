@@ -1,5 +1,6 @@
 # **ToDoList Project**
-A simple task management system (ToDo List) providing an API to handle tasks efficiently. The backend is built with ASP.NET Core, using a MySQL database for data storage. It supports essential CRUD operations for task management.
+A task management API built with ASP.NET Core and MySQL.
+
 ---
 
 ## **Overview**
